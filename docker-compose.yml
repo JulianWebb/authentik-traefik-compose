@@ -20,14 +20,6 @@ services:
     command: worker
     volumes:
       - "./certs:/certs"
-  geoip:
-    image: maxmindinc/geoipupdate:latest
-    environment:
-      - GEOUPDATE_EDITION_IDS
-      - GEOUPDATE_FREQUENCY
-    volumes:
-      - "./geoip:/usr/share/GeoIP"
-    restart: unless-stopped
   redis:
     image: redis:alpine
     container_name: ${REDIS_NAME}

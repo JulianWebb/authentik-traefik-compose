@@ -17,5 +17,4 @@ services:
     volumes:
       - "./media:/media"
       - "./custom-templates:/templates"
-      - "./geoip:/geoip"
     restart: unless-stopped
