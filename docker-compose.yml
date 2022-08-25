@@ -1,0 +1,53 @@
+version: "3.7"
+
+services:
+  authentik-server:
+    extends:
+      file: common-services.yml
+      service: authentik
+    container_name: ${AUTHENTIK_SERVER_NAME}
+    command: server
+    labels:
+      - "traefik.http.routers.${AUTHENTIK_SERVER_NAME}.rule=Host(`${AUTHENTIK_SERVER_HOST}`)"
+      - "traefik.http.routers.${AUTHENTIK_SERVER_NAME}.entrypoints=web,webSecure"
+      - "traefik.http.routers.${AUTHENTIK_SERVER_NAME}.service=${AUTHENTIK_SERVER_NAME}"
+      - "traefik.http.services.${AUTHENTIK_SERVER_NAME}.loadbalancer.server.port=9000"
+  authentik-worker:
+    extends:
+      file: common-services.yml
+      service: authentik
+    container_name: ${AUTHENTIK_WORKER_NAME}
+    command: worker
+    volumes:
+      - "./certs:/certs"
+  geoip:
+    image: maxmindinc/geoipupdate:latest
+    environment:
+      - GEOUPDATE_EDITION_IDS
+      - GEOUPDATE_FREQUENCY
+    volumes:
+      - "./geoip:/usr/share/GeoIP"
+    restart: unless-stopped
+  redis:
+    image: redis-alpine
+    container_name: ${REDIS_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: "20s"
+      interval: "30s"
+      retries: 5
+      timeout: "3s"
+    restart: unless-stopped
+  postgres:
+    image: postgres:14-alpine
+    container_name: ${POSTGRES_NAME}
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    volumes:
+      - "./postgres:/var/lib/postgresql/data"
+
+networks:
+  default:
+    external: true
+    name: ${NETWORK_NAME}
