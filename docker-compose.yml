@@ -29,7 +29,7 @@ services:
       - "./geoip:/usr/share/GeoIP"
     restart: unless-stopped
   redis:
-    image: redis-alpine
+    image: redis:alpine
     container_name: ${REDIS_NAME}
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
