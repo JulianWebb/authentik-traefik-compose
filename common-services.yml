@@ -13,6 +13,7 @@ services:
       - AUTHENTIK_ERROR_REPORTING__ENABLED
       - AUTHENTIK_DISABLE_STARTUP_ANALYTICS
       - AUTHENTIK_AVATARS
+      - AUTHENTIK_SECRET_KEY
     volumes:
       - "./media:/media"
       - "./custom-templates:/templates"
