@@ -20,6 +20,8 @@ services:
     command: worker
     volumes:
       - "./certs:/certs"
+    depends_on:
+      - authentik-server
   redis:
     image: redis:alpine
     container_name: ${REDIS_NAME}

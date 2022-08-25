@@ -16,4 +16,7 @@ services:
     volumes:
       - "./media:/media"
       - "./custom-templates:/templates"
+    depends_on:
+      - redis
+      - postgres
     restart: unless-stopped
